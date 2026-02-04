@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DATANEX'26 • Veltech University(DS)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --lavender-top: #c5b7ff;
+      --lavender-bottom: #f3ecff;
+      --text-main: #111111;
+      --text-muted: #4b5563;
+      --bg-page: #f5f5f7;
+      --black: #050509;
+      --lavender-soft: #e5ddff;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ------------ NAVBAR ------------ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(22px);
+      background: linear-gradient(
+          to bottom,
+          rgba(243, 244, 246, 0.9),
+          rgba(243, 244, 246, 0.55),
+          transparent
+        );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.9rem 1.5rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111827;
+      color: white;
+      font-size: 18px;
+      padding-bottom: 2px;
+      flex-shrink: 0;
+    }
+
+    .logo-circle img {
+      height: 20px;
+      width: 20px;
+    }
+
+    .nav-email {
+      font-size: 0.78rem;
+      color: #6b7280;
+      word-break: break-all;
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 1.75rem;
+      font-size: 0.85rem;
+      color: #374151;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-center a {
+      position: relative;
+    }
+
+    .nav-center a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.2rem;
+      height: 1.5px;
+      width: 0;
+      background: #111827;
+      transition: width 0.18s ease;
+    }
+
+    .nav-center a:hover::after {
+      width: 100%;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* small countdown in navbar (now visible & wired) */
+    .nav-countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: #111111;
+      color: #ffffff;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Deadline tag in top right corner */
+    .deadline-tag {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.6rem 1rem;
+      background: linear-gradient(135deg, #d59ce1 0%, #ce8ed1 100%);
+      border-radius: 0.6rem 0.6rem 0.2rem 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 16px rgba(220, 124, 230, 0.8),
+        0 0 32px rgba(220, 38, 38, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      animation: deadlineGlow 2s ease-in-out infinite;
+      position: relative;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .deadline-tag::before {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid #b41cb9;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+    }
+
+    .deadline-tag::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: #c45ac8;
+      border-radius: 50%;
+    }
+
+    .deadline-ribbon {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #000000;
+    }
+
+    .deadline-date {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #040404;
+      line-height: 1;
+    }
+
+    .deadline-date sup {
+      font-size: 0.6rem;
+      margin-left: 0.1rem;
+    }
+
+    /* Glow animation */
+    @keyframes deadlineGlow {
+      0%,
+      100% {
+        box-shadow: 0 0 16px rgba(220, 173, 228, 0.8),
+          0 0 32px rgba(232, 125, 241, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 24px rgb(230, 142, 235),
+          0 0 48px rgba(199, 129, 221, 0.7),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .deadline-tag {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.85rem;
+      }
+      .deadline-ribbon {
+        font-size: 0.65rem;
+      }
+      .deadline-date {
+        font-size: 0.78rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .deadline-tag {
+        padding: 0.45rem 0.75rem;
+        border-radius: 0.5rem 0.5rem 0.15rem 0.5rem;
+      }
+      .deadline-ribbon {
+        font-size: 0.6rem;
+      }
+      .deadline-date {
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .deadline-tag {
+        padding: 0.4rem 0.65rem;
+        gap: 0.15rem;
+      }
+      .deadline-ribbon {
+        font-size: 0.55rem;
+      }
+      .deadline-date {
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .deadline-tag {
+        padding: 0.35rem 0.6rem;
+        flex-direction: row;
+        gap: 0.3rem;
+      }
+      .deadline-ribbon {
+        font-size: 0.5rem;
+      }
+      .deadline-date {
+        font-size: 0.6rem;
+      }
+      .nav-countdown {
+        font-size: 0.65rem;
+      }
+    }
+
+    /* ------------ HERO ------------ */
+    .hero {
+      margin-top: 1.2rem;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      background: linear-gradient(
+        to bottom,
+        var(--lavender-top),
+        var(--lavender-bottom)
+      );
+      padding: 2.4rem 2.4rem 1.8rem;
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+
+    .hero-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-headline {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      line-height: 1.05;
+      color: #111111;
+    }
+
+    .hero-headline span {
+      display: block;
+    }
+
+    .hero-right-links {
+      font-size: 0.9rem;
+      color: #111111;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      column-gap: 1.2rem;
+      row-gap: 0.35rem;
+      font-family: "Georgia", "Times New Roman", serif;
+      min-width: 220px;
+    }
+
+    .hero-right-links a {
+      display: block;
+    }
+
+    .hero-newsletter-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-newsletter {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-newsletter-left {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge {
+      width: 80px;
+      height: 80px;
+      background-image: url(./Gemini_Generated_Image_cjhw1rcjhw1rcjhw.png);
+      border-radius: 999px;
+      border: 1px solid #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      text-align: center;
+      padding: 0.35rem;
+      color: white;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+
+    .hero-text {
+      max-width: 260px;
+    }
+
+    .hero-register-wrap {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .hero-register-btn {
+      border-radius: 999px;
+      padding: 0.7rem 1.9rem;
+      border: none;
+      background: #000000;
+      color: #c5b7ff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      width: 100%;
+      max-width: 220px;
+      text-align: center;
+    }
+
+    .hero-register-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.55);
+    }
+
+    /* Countdown strip */
+    .hero-countdown-row {
+      margin-top: 1.2rem;
+      display: flex;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .countdown-container {
+      display: flex;
+      gap: 0.9rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.9rem;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(18px);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .count-card {
+      min-width: 80px;
+      padding: 0.7rem 0.9rem;
+      border-radius: 0.9rem;
+      background: #1f2430;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.55);
+      text-align: center;
+      color: #e5e7eb;
+      flex: 1 1 80px;
+      max-width: 120px;
+    }
+
+    .count-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fdfdfd;
+      margin-bottom: 0.15rem;
+    }
+
+    .count-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #cbd5f5;
+    }
+
+    .hero-bottom-title {
+      margin-top: 1.6rem;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: clamp(2.4rem, 7vw, 4.05rem);
+      line-height: 0.9;
+      color: #111111;
+      letter-spacing: -0.04em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-bottom-title span {
+      display: block;
+    }
+
+    .hero-asterisk {
+      font-size: 3rem;
+      position: absolute;
+      right: 0;
+      bottom: 0.3rem;
+    }
+
+    /* ------------ CENTER TILTED CARD (ANIMATED) ------------ */
+    .hero-photo-card {
+      position: absolute;
+      right: 8%;
+      top: 52%;
+      transform: translateY(-50%);
+      width: 260px;
+      height: 340px;
+      perspective: 1200px;
+      pointer-events: none;
+    }
+
+    .hero-photo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 0.75rem;
+      transform-origin: center bottom;
+      opacity: 0;
+      transform: translateY(40%) rotate(-8deg);
+    }
+
+    .hero-photo-inner.is-active {
+      animation: slideCardUp 0.9s ease-out forwards;
+    }
+
+    @keyframes slideCardUp {
+      0% {
+        opacity: 0;
+        transform: translateY(80%) rotate(-16deg);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(-6%) rotate(-6deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(-10deg);
+      }
+    }
+
+    /* ------------ MAIN CONTENT (white block) ------------ */
+    .main-block {
+      margin-top: -1.5rem;
+      background: white;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -6px 22px rgba(15, 23, 42, 0.15);
+      padding: 2.3rem 2.4rem 2.8rem;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-heading {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-three {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .info-card {
+      border-radius: 1rem;
+      border: 1px solid #e5e7eb;
+      padding: 1rem 1rem 1.1rem;
+      background: #f9fafb;
+    }
+
+    .info-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .info-text {
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+    .prize-pool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #111111;
+  background: linear-gradient(135deg, #fde68a, #fcd34d, #fbbf24);
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45);
+  animation: prizePulse 2.6s ease-in-out infinite;
+  border: 1px solid rgba(180, 83, 9, 0.45);
+}
+
+/* smooth pulsing glow that matches warm highlight colors */
+@keyframes prizePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 22px 4px rgba(245, 158, 11, 0.7);
+    transform: scale(1.03);
+  }
+}
+
+
+    /* Lavender animated venue box */
+    .venue-box {
+      margin-top: 1.8rem;
+      border-radius: 1.1rem;
+      padding: 1rem 1.2rem;
+      background: #e5ddff;
+      border: 1px solid #d0c7ff;
+      font-size: 0.86rem;
+      animation: venuePulse 6s ease-in-out infinite;
+    }
+
+    .venue-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    @keyframes venuePulse {
+      0%,
+      100% {
+        background-color: #e5ddff;
+      }
+      50% {
+        background-color: #f0e9ff;
+      }
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+      margin-top: 0.8rem;
+    }
+
+    .event-card {
+      border-radius: 1rem;
+      border: 1px solid #e5e7eb;
+      padding: 0.9rem 0.95rem 0.95rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease,
+        border-color 0.18s ease;
+      background: #ffffff;
+    }
+
+    .event-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.12);
+      border-color: #111827;
+    }
+
+    .event-emoji {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .event-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .event-sub {
+      font-size: 0.78rem;
+      color: #4b5563;
+    }
+
+    .sub-section-title {
+      margin-top: 2.1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.2rem;
+    }
+
+    .list-block h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .list-block ul {
+      list-style: none;
+      font-size: 0.82rem;
+      color: #374151;
+    }
+
+    .list-block li + li {
+      margin-top: 0.2rem;
+    }
+
+    .coordinator-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    .coord-card {
+      border-radius: 0.8rem;
+      border: 1px solid #e5e7eb;
+      padding: 0.6rem 0.7rem 0.7rem;
+      font-size: 0.82rem;
+    }
+
+    .coord-role {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #6b7280;
+      margin-bottom: 0.15rem;
+    }
+
+    /* Note & rules lavender animated box */
+    .note-rules-wrapper {
+      margin-top: 2.4rem;
+      border-radius: 1.2rem;
+      background: var(--lavender-soft);
+      padding: 1.4rem 1.5rem;
+      animation: pulse-soft 5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-soft {
+      0%,
+      100% {
+        background-color: #e5ddff;
+      }
+      50% {
+        background-color: #f0e9ff;
+      }
+    }
+
+    .note-rules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      font-size: 0.82rem;
+      color: #111827;
+    }
+
+    .note-rules h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .note-rules ul {
+      padding-left: 1rem;
+    }
+
+    .note-rules li + li {
+      margin-top: 0.2rem;
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal {
+      width: min(420px, 100% - 2.5rem);
+      background: white;
+      border-radius: 1.1rem;
+      padding: 1.3rem 1.3rem 1.1rem;
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.45);
+    }
+
+    .modal h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal p {
+      font-size: 0.82rem;
+      color: #4b5563;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal ul {
+      font-size: 0.8rem;
+      color: #374151;
+      padding-left: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal li + li {
+      margin-top: 0.2rem;
+    }
+
+    .modal button {
+      border-radius: 999px;
+      border: none;
+      padding: 0.45rem 1.1rem;
+      background: #111827;
+      color: white;
+      font-size: 0.8rem;
+      cursor: pointer;
+      float: right;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero-photo-card {
+        right: 4%;
+      }
+      .hero-newsletter-layout {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: flex-start;
+      }
+      .hero-register-wrap {
+        justify-content: flex-start;
+      }
+      .grid-three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .events-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .note-rules {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .hero-photo-card {
+        position: static;
+        width: 100%;
+        max-width: 320px;
+        height: 260px;
+        margin: 1.2rem auto 0;
+        transform: none;
+      }
+      .hero {
+        padding-bottom: 2.2rem;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav-center {
+        display: none;
+      }
+      .nav-inner {
+        flex-wrap: wrap;
+      }
+      .nav-right {
+        justify-content: flex-start;
+        gap: 0.5rem;
+      }
+      .hero {
+        padding: 2.1rem 1.5rem 2.2rem;
+        border-radius: 0 0 1.5rem 1.5rem;
+      }
+      .hero-top-row {
+        flex-direction: column;
+        gap: 1.1rem;
+      }
+      .hero-bottom-title {
+        font-size: 2.8rem;
+        margin-top: 1.8rem;
+      }
+      .main-block {
+        padding: 1.8rem 1.5rem 2.3rem;
+        border-radius: 1.5rem 1.5rem 0 0;
+      }
+      .grid-three,
+      .events-grid,
+      .two-col,
+      .coordinator-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-photo-card {
+        margin-top: 1.5rem;
+      }
+      .hero-newsletter-layout {
+        margin-top: 1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .countdown-container {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .count-card {
+        flex: 1 1 45%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-bottom-title {
+        font-size: 2.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="logo-circle">
+        <img src="./Gemini_Generated_Image_ecjbooecjbooecjb.png" alt="logo">
+      </div>
+      <div class="nav-email">datanex26@gmail.com</div>
+    </div>
+    <nav class="nav-center">
+      <a href="#home">Home</a>
+      <a href="#events">Events</a>
+      <a href="#coordinators">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-countdown">
+        <span id="navDays">00D</span>
+        <span id="navHours">00H</span>
+        <span id="navMins">00M</span>
+      </div>
+      <div class="deadline-tag">
+        <span class="deadline-ribbon">Deadline to Register</span>
+        <span class="deadline-date">2<sup>nd</sup> Feb 2026</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-shell">
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-top-row">
+      <h1 class="hero-headline">
+        <span>One Day National</span>
+        <span>Level Technical</span>
+        <span>Symposium</span>
+      </h1>
+
+      <div class="hero-right-links">
+        <a style="padding:5px 12px;background-color:#fff;border-radius:60px;text-align:center;" href="#events"><b>Technical Events</b></a>
+        <a style="padding:5px 12px;background-color:#fff;border-radius:60px;text-align:center;" href="#events"><b>Non‑Technical Events</b></a>
+      </div>
+    </div>
+
+    <div class="hero-newsletter-layout" id="register">
+      <div class="hero-newsletter">
+        <div class="hero-newsletter-left">
+          <div class="hero-badge">
+            DATANEX'26<br />
+            Veltech CSE‑DS
+          </div>
+          <div class="hero-text">
+            Register today to receive details, schedules, and updates for DATANEX'26 at Veltech University.
+          </div>
+        </div>
+      </div>
+      <div class="hero-register-wrap">
+        <button class="hero-register-btn"
+                onclick="window.open('https://apps.veltech.edu.in/registration/symposium/datanex/','_blank')">
+          Register Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="hero-countdown-row">
+      <div class="countdown-container">
+        <div class="count-card">
+          <div id="cd-days" class="count-value">0</div>
+          <div class="count-label">Days</div>
+        </div>
+        <div class="count-card">
+          <div id="cd-hours" class="count-value">0</div>
+          <div class="count-label">Hours</div>
+        </div>
+        <div class="count-card">
+          <div id="cd-mins" class="count-value">0</div>
+          <div class="count-label">Minutes</div>
+        </div>
+        <div class="count-card">
+          <div id="cd-secs" class="count-value">0</div>
+          <div class="count-label">Seconds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-bottom-title">
+      <span>DATANEX'26</span>
+      <span class="hero-asterisk"></span>
+    </div>
+
+    <!-- Animated card -->
+    <div class="hero-photo-card">
+      <div class="hero-photo-inner" id="heroSlide"></div>
+    </div>
+  </section>
+
+  <!-- MAIN WHITE BLOCK -->
+  <section class="main-block">
+    <!-- What DATANEX provides -->
+    <div class="pill">Datanex provides</div>
+    <h2 class="section-heading">Experiences & Benefits</h2>
+    <div class="grid-three">
+      <div class="info-card">
+        <div class="info-title">Registration Kit</div>
+        <div class="info-text">Get an exclusive kit on registration with event essentials and goodies.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-title">Merit Certificate</div>
+        <div class="info-text">Winners of technical & non-technical events receive merit certificates along with cash prizes.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-title">Participation Certificate</div>
+        <div class="info-text">Every registered participant receives a certificate recognizing their involvement.</div>
+      </div>
+      <div class="info-card" id="workshop">
+        <div class="info-title">Free Workshop</div>
+        <div class="info-text">
+          Attend a complimentary workshop on “Future of IT” from Automation to Intelligence.
+        </div>
+      </div>
+    </div>
+
+    <!-- Venue box -->
+    <div class="venue-box">
+      <div class="venue-title">Venue</div>
+      <div>Veltech Rangarajan Dr. Sagunthala R&amp;D Institute of Science and Technology, Vel Murugan Auditorium, Avadi, Chennai.</div>
+      <div style="margin-top:0.2rem;">Event Date: <strong>11 February 2026</strong></div>
+    </div>
+
+    <div class="info-card" style="background-color: #ded7f7; margin-top:1rem;">
+      <div class="info-title">Registration Fee</div>
+      <div class="info-text">
+        <strong>₹199 per participant</strong>
+        <br/>
+      </div>
+    </div>
+
+    <!-- Events -->
+    <div style="margin-top:2.4rem;">
+      <div class="pill">Line‑up</div>
+      <h2 class="section-heading">Technical Events</h2>
+      <div class="events-grid" id="events">
+        <div class="event-card" data-event="Project Expo">
+          <div class="event-emoji">💻</div>
+          <div class="event-title">Project Expo</div>
+          <div class="event-sub">Showcase hardware, software, or hybrid projects. <b>Click to view rules.</b></div>
+        </div>
+        <div class="event-card" data-event="Technical Quiz">
+          <div class="event-emoji">🎯</div>
+          <div class="event-title">Technical Quiz</div>
+          <div class="event-sub">Test your tech knowledge through fast-paced rounds of questions on coding, innovation, and emerging technologies. <b>Click to view rules.</b></div>
+        </div>
+        <div class="event-card" data-event="Debugging">
+          <div class="event-emoji">🐞</div>
+          <div class="event-title">Debugging</div>
+          <div class="event-sub">Locate and fix bugs across rounds. <b>Click to view rules.</b></div>
+        </div>
+      </div>
+
+      <h3 class="sub-section-title">Non‑Technical Events</h3>
+      <div class="events-grid" style="margin-top:0.9rem;">
+        <div class="event-card" data-event="Expressive Art">
+          <div class="event-emoji">🎨</div>
+          <div class="event-title">Expressive Art</div>
+          <div class="event-sub">Showcase creative works that blend design, technology, and storytelling through digital or traditional mediums. <b>Click to view rules.</b></div>
+        </div>
+        <div class="event-card" data-event="Product out of E‑Waste">
+          <div class="event-emoji">♻️</div>
+          <div class="event-title">Product out of E‑Waste</div>
+          <div class="event-sub">Transform discarded electronics into useful or artistic products. <b>Click to view rules.</b></div>
+        </div>
+        <div class="event-card" data-event="Connections">
+          <div class="event-emoji">🤝</div>
+          <div class="event-title">Connections</div>
+          <div class="event-sub">Build meaningful links with peers, mentors, and industry experts through puzzle‑style activities. <b>Click to view rules.</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prizes -->
+    <div class="two-col" style="margin-top:2.6rem;">
+      <div class="list-block">
+        <div class="pill">Prizes</div>
+        <h4>Cash Prizes</h4>
+        <ul>
+  <li>
+    <span class="prize-pool-badge">
+      💰 Total Prize Pool: ₹1,00,000
+    </span>
+  </li>
+  <li style="margin-top:0.4rem;">
+    <strong>Overall Champion:</strong> 🏆 Best Performing College Trophy
+  </li>
+
+  <li style="margin-top:0.5rem;"><strong>Technical Events (3):</strong></li>
+  <li>• First Prize: ₹3000</li>
+  <li>• Second Prize: ₹2000</li>
+  <li>• Third Prize: ₹1000</li>
+
+  <li style="margin-top:0.5rem;"><strong>Non‑Technical Events (3):</strong></li>
+  <li>• First Prize: ₹3000</li>
+  <li>• Second Prize: ₹2000</li>
+  <li>• Third Prize: ₹1000</li>
+</ul>
+
+      </div>
+    </div>
+
+    <!-- Note + Rules lavender animated box -->
+    <div class="note-rules-wrapper">
+      <div class="note-rules">
+        <div>
+          <h4>General Instructions</h4>
+          <ul>
+            <li>Students should register individually even for team events. Team confirmation will be done later through a call/Message from the event coordinators.</li>
+            <li>Participants must carry a valid college ID card.</li>
+            <li>Registration is mandatory to participate in the event.</li>
+            <li>The event will start on time; latecomers are not allowed.</li>
+            <li>Participants must follow discipline and decorum throughout the event.</li>
+            <li>Use of mobile phones is restricted unless permitted by the coordinators.</li>
+            <li>Any form of malpractice or misbehavior will lead to immediate disqualification.</li>
+            <li>Participants should strictly adhere to the time limit given.</li>
+            <li>The judges' decision will be final and binding.</li>
+            <li>Certificates will be issued only to registered participants.</li>
+            <li>The organizing committee reserves the right to modify the rules if required.</li>
+            <li>On-the-spot registration is not allowed.</li>
+            <br>
+            <li style="list-style: none;"><b>Note:</b></li>
+            <li>Participants can attend only ONE non-technical event. However, participants may attend multiple technical events as per their wish and availability.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coordinators -->
+    <div class="list-block" id="coordinators" style="margin-top:2.4rem;">
+      <div class="pill">Contacts</div>
+      <h4>Coordinators</h4>
+      <div class="coordinator-grid">
+        <div class="coord-card">
+          <div class="coord-role">Student Coordinator</div>
+          <div>G. Venkatesh</div>
+          <div><a href="tel:8977238205">8977238205</a></div>
+        </div>
+        <div class="coord-card">
+          <div class="coord-role">Student Coordinator</div>
+          <div>T. Deeraj</div>
+          <div><a href="tel:6363618128">6363618128</a></div>
+        </div>
+        <div class="coord-card">
+          <div class="coord-role">Student Coordinator</div>
+          <div>D. Vivek</div>
+          <div><a href="tel:8360692272">8360692272</a></div>
+        </div>
+        <div class="coord-card">
+          <div class="coord-role">Student Coordinator</div>
+          <div>D. Pranathi</div>
+          <div><a href="tel:7013173988">7013173988</a></div>
+        </div>
+        <div class="coord-card">
+          <div class="coord-role">Faculty Coordinator</div>
+          <div>Dr. Rasina Begum B</div>
+          <div><a href="tel:9944907872">9944907872</a></div>
+        </div>
+        <div class="coord-card">
+          <div class="coord-role">Faculty Coordinator</div>
+          <div>Dr. Durga Devi P</div>
+          <div><a href="tel:9566103259">9566103259</a></div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:#4b5563;margin-top:0.6rem;">
+        Head of the Department: <strong>Dr. Gokuldhev M</strong>
+      </div>
+    </div>
+
+    <footer>
+      <span>© DATANEX'26, Veltech University. All rights reserved.</span>
+      <span>Developed by G. Prem Kumar • CSE Data Science</span>
+    </footer>
+  </section>
+</main>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="rulesModal">
+    <h3 id="modalTitle">Event Rules</h3>
+    <p id="modalIntro">
+      Please review these guidelines before participating in the event.
+    </p>
+    <ul id="modalList">
+      <li>Teams must report 30 minutes before the event start time.</li>
+      <li>Participants must carry a valid college ID card.</li>
+      <li>Decisions of judges and coordinators will be final.</li>
+    </ul>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+  // Event-specific rules
+  const eventRules = {
+    "Project Expo": [
+      "Team size: 2 members.",
+      "Equipment Responsibility: Teams must bring their own laptops, components, and accessories.",
+      "Project Type: Projects must be original and innovative.",
+      "Presentation: Teams will be given a fixed time for presentation and demo.",
+      "Evaluation: Judging is based on innovation, working model, and presentation."
+    ],
+    "Technical Quiz": [
+      "Team size: 2 members.",
+      "Rounds: Round 1: Technical MCQ (Preliminary), Round 2: Technical Quiz (On the Stage).",
+      "Teams must report on time.",
+      "Use of mobile phones or smart devices is strictly prohibited.",
+      "Decision of the quiz master and judges will be final.",
+      "Any malpractice leads to immediate disqualification.",
+      "Tie-breaker round will be conducted if required."
+    ],
+    "Debugging": [
+      "Team size: 2 members.",
+      "Participants must identify and correct errors in the given program.",
+      "Debugging must be completed within the specified time limit.",
+      "Restrictions: Use of internet, AI tools, or external help is prohibited.",
+      "Evaluation is based on number of errors fixed, correctness of output, and time taken.",
+      "Language: Python."
+    ],
+    "Expressive Art": [
+      "Participation: Individual participation only.",
+      "Theme: Participants must create artwork based on the given theme.",
+      "Time Limit: The artwork must be completed within the specified time.",
+      "Materials: Participants must bring their own art materials.",
+      "Originality: The artwork must be original and created on the spot."
+    ],
+    "Product out of E‑Waste": [
+      "Participation: Individual or team of maximum 2 participants per team.",
+      "The product must be made primarily from e-waste materials such as old circuit boards, wires, resistors, capacitors, mobile/laptop parts, chargers, adapters, switches, etc.",
+      "Use of new components should be minimal and must be declared.",
+      "Each team must explain their product within the allotted time of 3–4 minutes.",
+      "Late entries will not be entertained.",
+      "Participants must bring all the materials required for their product.",
+      "No materials or components will be provided by the college."
+    ],
+    "Connections": [
+      "Participation: Individual or team of maximum 2 participants per team.",
+      "Task: Participants must identify the connection between the given images/words/clues."
+    ]
+  };
+
+  const cards = document.querySelectorAll(".event-card");
+  const backdrop = document.getElementById("modalBackdrop");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalList = document.getElementById("modalList");
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const name = card.getAttribute("data-event");
+      modalTitle.textContent = name + " – Rules";
+
+      const rules = eventRules[name] || [
+        "Detailed rules will be announced at the venue."
+      ];
+      modalList.innerHTML = "";
+      rules.forEach((rule) => {
+        const li = document.createElement("li");
+        li.textContent = rule;
+        modalList.appendChild(li);
+      });
+
+      backdrop.style.display = "flex";
+    });
+  });
+
+  function closeModal() {
+    backdrop.style.display = "none";
+  }
+
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+
+  // --- Hero sliding card slideshow ---
+  const heroSlide = document.getElementById("heroSlide");
+
+  const heroSlides = [
+    { image: "image_494770cb.png" },
+    { image: "1767970246639.jpg" },
+    { image: "image_4d5d992f.png" },
+    { image: "1767970285040.jpg" },
+    { image: "1767970414038.jpg" },
+    { image: "1767970604008.jpg" },
+    { image: "image_c493620d.png" },
+    { image: "image_4b5f16f7.png" }
+  ];
+
+  let slideIndex = 0;
+  let cardAnimating = false;
+
+  function showNextHeroSlide() {
+    if (!heroSlide) return;
+    if (cardAnimating) return;
+    cardAnimating = true;
+
+    const slide = heroSlides[slideIndex];
+
+    heroSlide.classList.remove("is-active");
+    void heroSlide.offsetWidth; // reflow to restart animation
+
+    heroSlide.style.backgroundImage = `url(${slide.image})`;
+    heroSlide.textContent = "";
+    heroSlide.classList.add("is-active");
+
+    slideIndex = (slideIndex + 1) % heroSlides.length;
+
+    setTimeout(() => {
+      cardAnimating = false;
+    }, 950);
+  }
+
+  showNextHeroSlide();
+  setInterval(showNextHeroSlide, 5000);
+
+  // ---- COUNTDOWNS ----
+  // 1) Big countdown: Event date
+  const eventTarget = new Date("2026-02-11T09:00:00+05:30").getTime();
+
+  // 2) Navbar mini countdown: Registration deadline (adjust time if needed)
+  const registerTarget = new Date("2026-02-02T23:59:59+05:30").getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+
+    // ---------- Event countdown (hero cards) ----------
+    const eventDiff = eventTarget - now;
+
+    const dEl  = document.getElementById("cd-days");
+    const hEl  = document.getElementById("cd-hours");
+    const mEl  = document.getElementById("cd-mins");
+    const sEl  = document.getElementById("cd-secs");
+
+    if (dEl) {
+      if (eventDiff <= 0) {
+        dEl.textContent = hEl.textContent = mEl.textContent = sEl.textContent = "0";
+      } else {
+        const days  = Math.floor(eventDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((eventDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins  = Math.floor((eventDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs  = Math.floor((eventDiff % (1000 * 60)) / 1000);
+
+        dEl.textContent = days;
+        hEl.textContent = hours;
+        mEl.textContent = mins;
+        sEl.textContent = secs;
+      }
+    }
+
+    // ---------- Registration countdown (navbar chip) ----------
+    const navDaysEl  = document.getElementById("navDays");
+    const navHoursEl = document.getElementById("navHours");
+    const navMinsEl  = document.getElementById("navMins");
+
+    if (navDaysEl) {
+      const regDiff = registerTarget - now;
+
+      if (regDiff <= 0) {
+        navDaysEl.textContent  = "00D";
+        navHoursEl.textContent = "00H";
+        navMinsEl.textContent  = "00M";
+      } else {
+        const rDays  = Math.floor(regDiff / (1000 * 60 * 60 * 24));
+        const rHours = Math.floor((regDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const rMins  = Math.floor((regDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+        const pad = (n) => n.toString().padStart(2, "0");
+        navDaysEl.textContent  = pad(rDays)  + "D";
+        navHoursEl.textContent = pad(rHours) + "H";
+        navMinsEl.textContent  = pad(rMins)  + "M";
+      }
+    }
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>
